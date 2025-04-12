@@ -6,7 +6,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.logging.HttpLoggingInterceptor
 
 object RetrofitClient {
-    private const val BASE_URL = "https://Sarahzyx.pythonanywhere.com/"  // 替换为实际API地址
+    private const val BASE_URL = "https://Sarahzyx.pythonanywhere.com/"
+//    private const val BASE_URL = "http://10.0.2.2:8000/"  // 本地测试地址，使用 Android 模拟器需用 10.0.2.2 映射到 localhost
     // 创建日志拦截器
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
