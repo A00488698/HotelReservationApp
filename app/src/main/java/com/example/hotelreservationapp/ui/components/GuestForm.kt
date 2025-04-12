@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.hotelreservationapp.model.Guest
 
@@ -66,4 +67,14 @@ fun GuestForm(
             Text("Female")
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun GuestFormPreview() {
+    GuestForm(
+        index = 1,
+        guest = Guest(guest_name = "John Doe", gender = "Male"),
+        onGuestChanged = {},
+        showError = false
+    )
 }

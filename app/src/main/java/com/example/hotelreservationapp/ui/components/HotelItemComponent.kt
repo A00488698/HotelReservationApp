@@ -14,6 +14,7 @@ import com.example.hotelreservationapp.model.Hotel
 //import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun HotelItem(
@@ -74,4 +75,20 @@ fun HotelItem(
             )
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun HotelItemPreview() {
+    // 示例数据：可调整字段值测试不同效果
+    val testHotel = Hotel(
+        id = 1.toString(),
+        name = "Test Hotel",
+        price = 1000.00,
+        available = false,
+    )
+    HotelItem(
+        hotel = testHotel,
+        isSelected = false,
+        onHotelClicked = { /* 测试时此处不执行任何操作 */ }
+    )
 }
