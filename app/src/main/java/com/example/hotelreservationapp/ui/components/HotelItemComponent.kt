@@ -1,25 +1,55 @@
 package com.example.hotelreservationapp.ui.components
 
+//import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.hotelreservationapp.model.Hotel
+//import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
 fun HotelItem(
     hotel: Hotel,
     isSelected: Boolean,
     onHotelClicked: () -> Unit
+
 ) {
+//    val context = LocalContext.current
+    // 使用状态控制 AlertDialog 是否显示
+    var showUnavailableDialog by remember { mutableStateOf(false) }
+
+    if (showUnavailableDialog) {
+        AlertDialog(
+            onDismissRequest = { showUnavailableDialog = false },
+            title = { Text(text = "Attention") },
+            text = { Text(text = "No available room") },
+            confirmButton = {
+                TextButton(onClick = { showUnavailableDialog = false }) {
+                    Text(text = "OK")
+                }
+            }
+        )
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable(onClick = onHotelClicked),
+            .clickable {
+                if (hotel.available) {
+                    onHotelClicked()
+                } else {
+//                    Toast.makeText(context, "No available room", Toast.LENGTH_SHORT).show()
+                      showUnavailableDialog = true
+                }
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 8.dp else 4.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected)

@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import com.example.hotelreservationapp.ui.components.AppHeaderBarWithBack
+import com.example.hotelreservationapp.ui.components.GuestForm
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
@@ -72,8 +73,9 @@ fun Screen3(
     val guestCount = guestsCount.toIntOrNull() ?: 1
 
     // 计算入住天数
-    val checkInDate = LocalDate.parse(checkIn)
-    val checkOutDate = LocalDate.parse(checkOut)
+    val formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-M-d")
+    val checkInDate = LocalDate.parse(checkIn, formatter)
+    val checkOutDate = LocalDate.parse(checkOut, formatter)
     val daysBetween = ChronoUnit.DAYS.between(checkInDate, checkOutDate)
     // 将酒店单价转换为 Double 并计算总费用：单价 * 天数 * 客人数量
     val price = hotelPrice.toDoubleOrNull() ?: 0.0
@@ -156,7 +158,7 @@ fun Screen3(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = hotelName,
+                    text = "Your selected hotel is $hotelName",
                     style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
@@ -166,13 +168,25 @@ fun Screen3(
                 val formattedCheckIn = checkInDate.format(dateFormatter)
                 val formattedCheckOut = checkOutDate.format(dateFormatter)
                 Text(
-                    text = "$formattedCheckIn to $formattedCheckOut",
+                    text = "Dates of stay: $formattedCheckIn to $formattedCheckOut",
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
-                Text("Number of Guests: $guestsCount", style = MaterialTheme.typography.bodyMedium)
-                Text("Customer: $customerName", style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = "Hotel rate: $price per day",
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text("Number of Guests: $guestsCount", style = MaterialTheme.typography.bodyMedium)
+                    Spacer(modifier = Modifier.width(50.dp))
+                    Text("Customer: $customerName", style = MaterialTheme.typography.bodyMedium)
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             // 滚动区域，仅 GuestForm 列表滚动
@@ -197,53 +211,3 @@ fun Screen3(
     }
 }
 
-@Composable
-fun GuestForm(
-    index: Int,
-    guest: Guest,
-    onGuestChanged: (Guest) -> Unit,
-    showError: Boolean
-) {
-    var name by remember { mutableStateOf(guest.guest_name) }
-    var gender by remember { mutableStateOf(guest.gender) }
-
-    Column(modifier = Modifier.padding(8.dp)) {
-        Text("Guest $index", style = MaterialTheme.typography.titleSmall)
-        OutlinedTextField(
-            value = name,
-            onValueChange = { newName ->
-                name = newName
-                onGuestChanged(Guest(guest_name = newName, gender = gender))
-            },
-            label = { Text("Name") },
-            modifier = Modifier.fillMaxWidth(),
-            // 仅在提交时且为空才显示错误状态
-            isError = showError && name.trim().isEmpty()
-        )
-        if (showError && name.trim().isEmpty()) {
-            Text(
-                text = "Name cannot be empty",
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-        Row(modifier = Modifier.padding(top = 8.dp)) {
-            RadioButton(
-                selected = gender == "Male",
-                onClick = {
-                    gender = "Male"
-                    onGuestChanged(Guest(guest_name = name, gender = "Male"))
-                }
-            )
-            Text("Male", modifier = Modifier.padding(end = 16.dp))
-            RadioButton(
-                selected = gender == "Female",
-                onClick = {
-                    gender = "Female"
-                    onGuestChanged(Guest(guest_name = name, gender = "Female"))
-                }
-            )
-            Text("Female")
-        }
-    }
-}

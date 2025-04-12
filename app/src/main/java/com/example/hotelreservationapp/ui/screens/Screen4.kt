@@ -37,7 +37,7 @@ fun Screen4(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Thank you! Your confirmation number is $confirmationNumber",
+                text = "Thank you for your reservation, your confirmation number $confirmationNumber",
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(24.dp))
